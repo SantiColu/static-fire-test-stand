@@ -19,6 +19,7 @@ String ping = "0";
 boolean ignited = false;
 boolean aborted = false;
 String[] allValues = {};
+String lastBroadcast = "";
 
 boolean overAbort = false;
 boolean overGo = false;
@@ -70,7 +71,8 @@ void rawData() {
   text("Ignited: " + new Boolean(ignited).toString(), 10, 190);
   text("Aborted: " + new Boolean(aborted).toString(), 10, 220);
   text("Length: " + allValues.length, 10, 250);
-  text("Raw: \n" + rawData, 10, 280);
+  text("LB: \n" + lastBroadcast, 10, 280);
+  text("Raw: \n" + rawData, 10, 360);
 }
 
 void abortButton() {
@@ -250,6 +252,11 @@ void serialEvent(Serial myPort) {
     
     if (items.length != 3) {
       println("received malformed package", data);
+      return;
+    }
+    
+    if (items[0].equals("internal")) {
+      lastBroadcast = items[1] + "|" + items[2];
       return;
     }
     
